@@ -1,0 +1,60 @@
+in /etc/pm/power.d place a file named autobrightness.sh
+do: sudo chmod +x autobrightness.sh
+numbers may have to be changed based on preference
+
+//to disable touchpad while typing, put this in startup
+//   sudo syndaemon -i 1 -K -d
+//https://help.ubuntu.com/community/SynapticsTouchpad/PreMaverick
+//use https://github.com/invernizzie/sysadmin-bookmarks/blob/master/ubuntu-disable-touchpad-typing.md for fixing the scrolling bug after using syndaemon
+
+in /etc/default/grub change GRUB_CMDLINE_LINUX_DEFAULT line to:
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pcie_aspm=force acpi_backlight=vendor"
+
+xpad is my sticknote software
+the location of the stickynote info is in ~/.config/xpad/content-*
+Also could save things like the default style and the info for each note
+
+meld is my diff software
+
+from home directory:
+.bash_profile .emacs .gitconfig .git-prompt-sh .bashrc
+
+make xpad and the backround slideshow autostart
+
+set up tlp to avoid overheating:
+
+    sudo add-apt-repository ppa:linrunner/tlp
+    sudo apt-get update
+    sudo apt-get install tlp tlp-rdw
+//starts on boot by default
+
+remap toggle maximization to WindowsKey-F
+
+to fix bad coloring of desktop icon names
+
+    Create a file named gtk.css in your ~/.config/gtk-3.0 directory.
+    and put this in it:
+
+    .nemo-desktop.nemo-canvas-item {
+    color: #FFFFFF;
+    text-shadow: 1px 1px @desktop_item_text_shadow;
+    }
+
+    do these two things:
+    Alt+F2, type nemo -q and hit Enter
+    Alt+F2, type nemo -n and hit Enter
+
+in themes, set icons to Humanity
+
+to get the normal fonts in LibreOffice
+   sudo apt-get install ttf-mscorefonts-installer
+
+to make firefox spell-check with american spellings:
+   In Firefox address bar type: about:config
+   ignore the warranty warning
+   type "spell" in the Filter
+   change en_GB to en_US
+
+emacs flycheck installation:
+      run: M-x package-install RET flycheck within emacs
+      sudo apt-get install cppcheck
