@@ -25,7 +25,7 @@
 
 ;set tabs correctly
 (setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
+(setq-default tab-width 2)
 (defvaralias 'c-basic-offset 'tab-width)
 (defvaralias 'cperl-indent-level 'tab-width)
 
@@ -98,6 +98,16 @@
 (package-initialize)
 
 (setq flycheck-gcc-language-standard "c++11")
+(setq flycheck-clang-language-standard "c++11")
 (setq flycheck-highlighting-mode 'lines)
 (setq flycheck-cppcheck-checks "warning,information,performance")
 (add-hook 'after-init-hook #'global-flycheck-mode)
+
+(load "/usr/share/emacs/site-lisp/clang-format-3.4/clang-format.el")
+;(add-hook 'before-save-hook 'clang-format-buffer)
+
+(defun do-style-hook () ""
+  (if (eq major-mode 'c++-mode)
+      (clang-format-buffer)))
+
+(add-hook 'before-save-hook 'do-style-hook)
