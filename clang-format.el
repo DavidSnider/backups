@@ -43,8 +43,7 @@ PointerBindsToType: true,\
 BinPackArguments: false,\
 BinPackParameters: false,\
 AllowShortFunctionsOnASingleLine: false,\
-AllowShortIfStatementsOnASingleLine: false\
-ColumnLimit: 80}"))
+AllowShortIfStatementsOnASingleLine: false}"))
     (unwind-protect
         (call-process-region (point-min) (point-max) clang-format-binary
                              t (list t nil) nil
