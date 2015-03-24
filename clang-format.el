@@ -38,12 +38,41 @@
          (orig-point (point))
 ;         (style "file"))
          (style "{\
-BasedOnStyle: LLVM,\
-PointerBindsToType: true,\
+AlignEscapedNewlinesLeft: false,\
+AlignTrailingComments: true,\
+AllowAllParametersOfDeclarationOnNextLine: true,\
+AllowShortFunctionsOnASingleLine: true,\
+AllowShortIfStatementsOnASingleLine: false,\
+AllowShortLoopsOnASingleLine: false,\
+AlwaysBreakBeforeMultilineStrings: true,\
+AlwaysBreakTemplateDeclarations: false,\
 BinPackArguments: false,\
 BinPackParameters: false,\
-AllowShortFunctionsOnASingleLine: false,\
-AllowShortIfStatementsOnASingleLine: false}"))
+BreakBeforeBinaryOperators: false,\
+BreakBeforeBraces: Attach,\
+BreakBeforeTernaryOperators: true,\
+BreakConstructorInitializersBeforeComma: false,\
+ColumnLimit: 80,\
+ConstructorInitializerAllOnOneLineOrOnePerLine: false,\
+ConstructorInitializerIndentWidth: 4,\
+Cpp11BracedListStyle: true,\
+IndentCaseLabels: false,\
+IndentFunctionDeclarationAfterType: false,\
+IndentWidth: 2,\
+Language: Cpp,\
+MaxEmptyLinesToKeep: 2,\
+NamespaceIndentation: None,\
+PointerBindsToType: true,\
+SpaceBeforeAssignmentOperators: true,\
+SpaceBeforeAssignmentOperators: true,\
+SpaceInEmptyParentheses: false,\
+SpacesBeforeTrailingComments: 1,\
+SpacesInAngles: false,\
+SpacesInCStyleCastParentheses: false,\
+SpacesInParentheses: false,\
+Standard: Cpp11,\
+TabWidth: 2,\
+UseTab: Never}"))
     (unwind-protect
         (call-process-region (point-min) (point-max) clang-format-binary
                              t (list t nil) nil
