@@ -101,6 +101,7 @@
 (setq flycheck-clang-language-standard "c++11")
 (setq flycheck-highlighting-mode 'lines)
 (setq flycheck-cppcheck-checks "warning,information,performance")
+(setq flycheck-check-syntax-automatically '(new-line save))
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 (load "/usr/share/emacs/site-lisp/clang-format-3.4/clang-format.el")
@@ -109,5 +110,4 @@
 (defun do-style-hook () ""
   (if (eq major-mode 'c++-mode)
       (clang-format-buffer)))
-
 (add-hook 'before-save-hook 'do-style-hook)

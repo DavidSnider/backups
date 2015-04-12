@@ -17,16 +17,21 @@ alias commit='git commit -m'
 alias st='git st'
 alias gr='git gr'
 
-alias cdp3='cd ~/Documents/281\ IA/winter15/projects/'
+alias rm='moveToTrash'
+moveToTrash() {
+    'mv' "$@" '/home/david/.local/share/Trash/files/'
+}
+
 alias cd281='cd ~/Documents/281\ IA/winter15'
 
 alias cd376='cd ~/Documents/Current\ Classes/EECS\ 376'
-alias cd482='cd ~/Documents/Current\ Classes/EECS\ 482/projects/proj3'
+alias cd482='cd ~/Documents/Current\ Classes/EECS\ 482/projects/proj4'
 alias cd417='cd ~/Documents/Current\ Classes/Math\ 417'
 
 alias cddizzy='cd ~/Documents/programming/dizzy'
 
-alias update='sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get autoremove'
+alias updatehelper='sudo apt-get dist-upgrade && sudo apt-get autoremove'
+alias update='sudo apt-get update && updatehelper'
 
 alias diff='meld'
 
@@ -41,13 +46,9 @@ function prompt {
     local CYAN="\[\033[0;36m\]"
     local NORMAL="\[\033[0m\]"
 
-#    PS1="$CYAN[\u]$GREEN[\w]$NORMAL"
-#    PS1="$PS1\n> "
-
     PS1='$(__git_ps1 " (%s)")'
     PS1="$CYAN[\u]$GREEN[\w]$NORMAL$PS1"
     PS1="$PS1\n> "
-
 }
 prompt
 
