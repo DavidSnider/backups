@@ -36,8 +36,6 @@
 
 ; highlight long lines
 (require 'whitespace)
-;this is due to a lower resolution. 80 is the norm.
-;(setq whitespace-line-column 69) ; limit line length
 (setq whitespace-line-column 80) ; limit line length
 (setq whitespace-style '(face lines-tail))
 (add-hook 'prog-mode-hook 'whitespace-mode)
@@ -86,28 +84,60 @@
 ;make M-x gt do M-x goto-line
 (defalias 'gt 'goto-line)
 
-(global-set-key (kbd "M-c")                           'compile)
-(global-set-key (kbd "M-n")                           'next-error)
-;(global-set-key [f4]                               'kill-compilation)
-;(global-set-key [f5]                                'gud-next)
-;(global-set-key [f10]                               'gdb)
+;make M-x bcf do M-x byte-compile-file
+(defalias 'bcf 'byte-compile-file)
+
+;make M-x reload reload the current file
+(defalias 'reload 'revert-buffer)
+
+(global-set-key (kbd "M-c")         'compile)
+(global-set-key (kbd "M-n")         'next-error)
+;(global-set-key [f4]               'kill-compilation)
+;(global-set-key [f5]               'gud-next)
+;(global-set-key [f10]              'gdb)
 
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
+;define preferences for flycheck
 (setq flycheck-gcc-language-standard "c++11")
 (setq flycheck-clang-language-standard "c++11")
 (setq flycheck-highlighting-mode 'lines)
 (setq flycheck-cppcheck-checks "warning,information,performance")
 (setq flycheck-check-syntax-automatically '(new-line save))
-(add-hook 'after-init-hook #'global-flycheck-mode)
+
+(defun flycheck-python-setup ()
+  (flycheck-mode))
+(add-hook 'python-mode-hook #'flycheck-python-setup)
+
+(defun flycheck-cpp-setup ()
+  (flycheck-mode))
+(add-hook 'c++-mode-hook #'flycheck-cpp-setup)
+
+(defun autopep8-format-buffer ()
+  "Apply autopep8 to the current region or buffer"
+  (interactive)
+  (unless (region-active-p)
+    (mark-whole-buffer))
+  (shell-command-on-region
+   (region-beginning) (region-end) ;; beginning and end of region or buffer
+   "autopep8  -a -a -"             ;; command and parameters
+   (current-buffer)                ;; output buffer
+   t                               ;; replace?
+   "*autopep8 errors*"             ;; name of the error buffer
+   t))                             ;; show error buffer?
+
 
 (load "/usr/share/emacs/site-lisp/clang-format-3.4/clang-format.el")
-;(add-hook 'before-save-hook 'clang-format-buffer)
+;(add-hook 'after-init-hook #'global-flycheck-mode)
 
+;set up clang format and autopep8 to run on save
 (defun do-style-hook () ""
   (if (eq major-mode 'c++-mode)
-      (clang-format-buffer)))
+      (clang-format-buffer)
+    (if (eq major-mode 'python-mode)
+      (autopep8-format-buffer))))
+
 (add-hook 'before-save-hook 'do-style-hook)

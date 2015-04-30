@@ -56,5 +56,26 @@ to make firefox spell-check with american spellings:
    change en_GB to en_US
 
 emacs flycheck installation:
-      run: M-x package-install RET flycheck within emacs
-      sudo apt-get install cppcheck
+   run: M-x package-install RET flycheck within emacs
+   sudo apt-get install cppcheck
+   sudo apt-get install pylint
+
+   see
+       http://dreamrunner.org/wiki/public_html/Python/flycheck-pylint-emacs-with-python.html
+   and
+       http://code.litomisky.com/2014/10/24/getting-with-pylint-in-emacs/
+
+clang-format installation:
+   sudo apt-get install clang
+   use package mangager to install clang-format. May need to google.
+
+autopep8 installtion:
+   sudo apt-get install python-pip
+   sudo pip install --upgrade autopep8
+
+put the .pylintrc file in home directory
+
+
+in emacs, run
+   m-x byte-compile-file
+       ~/.emacs
