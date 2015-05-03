@@ -2,13 +2,15 @@ in /etc/pm/power.d place a file named autobrightness.sh
 do: sudo chmod +x autobrightness.sh
 numbers may have to be changed based on preference
 
-//to disable touchpad while typing, put this in startup
-//   sudo syndaemon -i 1 -K -d
-//https://help.ubuntu.com/community/SynapticsTouchpad/PreMaverick
-//use https://github.com/invernizzie/sysadmin-bookmarks/blob/master/ubuntu-disable-touchpad-typing.md for fixing the scrolling bug after using syndaemon
+to disable touchpad while typing, put this in startup
+   syndaemon -i 1 -K -d
+use https://github.com/invernizzie/sysadmin-bookmarks/blob/master/ubuntu-disable-touchpad-typing.md
+   for fixing the scrolling bug after using syndaemon
+Further, use the command restart_touchpad that is an alias for sudo synclient TouchpadOff=0 && sudo syndaemon -i 1 -K -d
+   when/if the mousepad stays disabled
 
 in /etc/default/grub change GRUB_CMDLINE_LINUX_DEFAULT line to:
-GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pcie_aspm=force acpi_backlight=vendor"
+   GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pcie_aspm=force acpi_backlight=vendor"
 
 xpad is my sticknote software
 the location of the stickynote info is in ~/.config/xpad/content-*
@@ -17,12 +19,11 @@ Also could save things like the default style and the info for each note
 meld is my diff software
 
 from home directory:
-.bash_profile .emacs .gitconfig .git-prompt-sh .bashrc
+.bash_profile .emacs .gitconfig .git-prompt-sh .bashrc .pylintrc
 
 make xpad and the backround slideshow autostart
 
 set up tlp to avoid overheating:
-
     sudo add-apt-repository ppa:linrunner/tlp
     sudo apt-get update
     sudo apt-get install tlp tlp-rdw
