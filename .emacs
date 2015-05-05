@@ -102,19 +102,21 @@
 (package-initialize)
 
 ;define preferences for flycheck
-(setq flycheck-gcc-language-standard "c++11")
-(setq flycheck-clang-language-standard "c++11")
 (setq flycheck-highlighting-mode 'lines)
-(setq flycheck-cppcheck-checks "warning,information,performance")
 (setq flycheck-check-syntax-automatically '(new-line save))
 
 (defun flycheck-python-setup ()
-  (flycheck-mode))
+  (flycheck-mode)
+  (setq flycheck-checker 'python-pylint))
 (add-hook 'python-mode-hook #'flycheck-python-setup)
 
 (defun flycheck-cpp-setup ()
-  (flycheck-mode))
+  (flycheck-mode)
+  (setq flycheck-checker 'c/c++-clang))
 (add-hook 'c++-mode-hook #'flycheck-cpp-setup)
+;(setq flycheck-gcc-language-standard "c++11")
+(setq flycheck-clang-language-standard "c++11")
+(setq flycheck-cppcheck-checks "warning,information,performance")
 
 (defun autopep8-format-buffer ()
   "Apply autopep8 to the current region or buffer"
@@ -128,7 +130,6 @@
    t                               ;; replace?
    "*autopep8 errors*"             ;; name of the error buffer
    t))                             ;; show error buffer?
-
 
 (load "/usr/share/emacs/site-lisp/clang-format-3.4/clang-format.el")
 ;(add-hook 'after-init-hook #'global-flycheck-mode)
