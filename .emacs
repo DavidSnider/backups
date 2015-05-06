@@ -107,38 +107,30 @@
 
 (defun flycheck-python-setup ()
   (flycheck-mode)
-  (setq flycheck-checker 'python-pylint))
+  (defvar flycheck-checker 'python-pylint))
 (add-hook 'python-mode-hook #'flycheck-python-setup)
 
 (defun flycheck-cpp-setup ()
   (flycheck-mode)
-  (setq flycheck-checker 'c/c++-clang))
+  (defvar flycheck-checker 'c/c++-clang))
 (add-hook 'c++-mode-hook #'flycheck-cpp-setup)
-;(setq flycheck-gcc-language-standard "c++11")
 (setq flycheck-clang-language-standard "c++11")
 (setq flycheck-cppcheck-checks "warning,information,performance")
 
-(defun autopep8-format-buffer ()
-  "Apply autopep8 to the current region or buffer"
-  (interactive)
-  (unless (region-active-p)
-    (mark-whole-buffer))
-  (shell-command-on-region
-   (region-beginning) (region-end) ;; beginning and end of region or buffer
-   "autopep8  -a -a -"             ;; command and parameters
-   (current-buffer)                ;; output buffer
-   t                               ;; replace?
-   "*autopep8 errors*"             ;; name of the error buffer
-   t))                             ;; show error buffer?
-
 (load "/usr/share/emacs/site-lisp/clang-format-3.4/clang-format.el")
 ;(add-hook 'after-init-hook #'global-flycheck-mode)
+
+(autoload 'autopep8-format-buffer "/home/david/autopep8.el")
+;(autoload 'py-autopep8-buffer "/home/david/py-autopep8.el")
+;(defvar py-autopep8-options '("-a, -a"))
 
 ;set up clang format and autopep8 to run on save
 (defun do-style-hook () ""
   (if (eq major-mode 'c++-mode)
       (clang-format-buffer)
     (if (eq major-mode 'python-mode)
-      (autopep8-format-buffer))))
+        (autopep8-format-buffer))))
+;        (py-autopep8-buffer))))
 
-(add-hook 'before-save-hook 'do-style-hook)
+;(add-hook 'before-save-hook #'autopep8-before-save)
+(add-hook 'before-save-hook #'do-style-hook)

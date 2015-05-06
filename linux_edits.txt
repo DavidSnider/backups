@@ -73,9 +73,9 @@ clang-format installation:
 autopep8 installtion:
    sudo apt-get install python-pip
    sudo pip install --upgrade autopep8
+   put the autopep8.el file in /home/david/.emacs.d/
 
 put the .pylintrc file in home directory
-
 
 in emacs, run
    m-x byte-compile-file
