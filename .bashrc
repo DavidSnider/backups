@@ -4,8 +4,7 @@ alias sshu='ssh sniderdj@login.engin.umich.edu'
 alias sshy='ssh -Y sniderdj@login.engin.umich.edu'
 
 #restarts touchpad with disabling while typing enabled
-alias restart_touchpad='sudo synclient TouchpadOff=0'
-alias restart_touchpad='restart_touchpad && sudo syndaemon -i 1 -K -d'
+alias restart_touchpad='sudo synclient TouchpadOff=1 && synclient TouchpadOff=0 && sudo syndaemon -i 1 -K -d'
 
 alias emaca='emacs'
 alias emcas='emacs'
@@ -71,5 +70,3 @@ export LS_COLORS
 export GIT_EDITOR=emacs
 export VISUAL=emacs
 export EDITOR=emacs
-
-export FS_CRYPT=CLEAR

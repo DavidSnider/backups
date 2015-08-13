@@ -56,6 +56,8 @@ to make firefox spell-check with american spellings:
    type "spell" in the Filter
    change en_GB to en_US
 
+run in emacs M-x package-refresh-contents
+
 emacs flycheck installation:
    run: M-x package-install RET flycheck within emacs
    sudo apt-get install cppcheck
@@ -69,6 +71,7 @@ emacs flycheck installation:
 clang-format installation:
    sudo apt-get install clang
    use package mangager to install clang-format. May need to google.
+   (m-x package install might work)
 
 autopep8 installtion:
    sudo apt-get install python-pip
@@ -80,3 +83,7 @@ put the .pylintrc file in home directory
 in emacs, run
    m-x byte-compile-file
        ~/.emacs
+
+to fix sleep issues if they exist:
+   put script named usbunbinder.sh containing contents of
+       https://gist.githubusercontent.com/zysh/9434dbfd835443ac32b9/raw/9970e302f3a0299a9e697c5535bc8c0cc021585b/Scriptototot in /etc/pm/sleep.d/ and then make it executable
