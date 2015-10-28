@@ -4,7 +4,7 @@ alias sshu='ssh sniderdj@login.engin.umich.edu'
 alias sshy='ssh -Y sniderdj@login.engin.umich.edu'
 
 #restarts touchpad with disabling while typing enabled
-alias restart_touchpad='sudo synclient TouchpadOff=1 && synclient TouchpadOff=0 && sudo syndaemon -i 1 -K -d'
+alias restart_touchpad='sudo synclient TouchpadOff=1 && sudo synclient TouchpadOff=0 && sudo syndaemon -i 1 -K -d'
 
 alias emaca='emacs'
 alias emcas='emacs'
@@ -20,17 +20,25 @@ alias push='git push'
 alias commit='git commit -m'
 alias st='git st'
 alias gr='git gr'
+alias br='git br'
+alias master='git checkout master'
+alias co='git checkout'
+alias rebase='git fetch && git rebase origin/master'
+
+alias tl='tmux list-sessions'
+alias ta='tmux attach-session -t'
 
 alias rm='moveToTrash'
 moveToTrash() {
     'mv' "$@" '/home/david/.local/share/Trash/files/'
 }
 
-alias cd281='cd ~/Documents/281\ IA/winter15'
+alias cd281='cd ~/Documents/281\ IA/Fall15'
+alias cd485='cd ~/Documents/Current\ Classes/EECS\ 485/proj3'
+alias cd270='cd ~/Documents/Current\ Classes/CMPLXSYS\ 270'
+alias scheduler='cd /home/david/Documents/Current\ Classes/scheduler'
 
-alias cd376='cd ~/Documents/Current\ Classes/EECS\ 376'
-alias cd482='cd ~/Documents/Current\ Classes/EECS\ 482/final'
-alias cd417='cd ~/Documents/Current\ Classes/Math\ 417'
+alias ssh485='ssh sniderdj@eecs485-09.eecs.umich.edu'
 
 alias cddizzy='cd ~/Documents/programming/dizzy'
 
@@ -38,6 +46,8 @@ alias updatehelper='sudo apt-get dist-upgrade && sudo apt-get autoremove'
 alias update='sudo apt-get update && updatehelper'
 
 alias diff='meld'
+
+alias netlogo='/home/david/Documents/Current\ Classes/CMPLXSYS\ 270/netlogo-5.2.0/netlogo.sh &'
 
 alias pack='tar vczf'
 alias unpack='tar xzvf'

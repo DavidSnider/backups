@@ -1,6 +1,10 @@
 ; auto c++mode to .h files
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
+; auto jinja2-mode to .html files
+(add-to-list 'auto-mode-alist '("\\.html\\'" . jinja2-mode))
+
+
 (setq-default ispell-program-name "aspell")
 
 ; fix split windows vertically issue
@@ -19,6 +23,7 @@
 ;fix stupid indent bugs
 (setq c-default-style "linux"
       c-basic-offset 2)
+(setq python-indent-offset 4)
 
 ;; Goto-line short-cut key
 (global-set-key "\C-cg" 'goto-line)
@@ -90,6 +95,21 @@
 ;make M-x reload reload the current file
 (defalias 'reload 'revert-buffer)
 
+;make M-x lf do M-x load-file
+(defalias 'lf 'load-file)
+
+(defun sc () ""
+  (interactive)
+  (add-hook 'before-save-hook #'do-style-hook))
+
+(defun rsc () ""
+  (interactive)
+  (remove-hook 'before-save-hook #'do-style-hook))
+
+(defun lfe () ""
+  (interactive)
+  (load-file "/home/dizzy/.emacs"))
+
 (global-set-key (kbd "M-c")         'compile)
 (global-set-key (kbd "M-n")         'next-error)
 ;(global-set-key [f4]               'kill-compilation)
@@ -110,6 +130,12 @@
   (defvar flycheck-checker 'python-pylint))
 (add-hook 'python-mode-hook #'flycheck-python-setup)
 
+(defun flycheck-js-setup ()
+  (flycheck-mode)
+  (defvar flycheck-checker 'javascript-jshint))
+(add-hook 'js-mode-hook #'flycheck-js-setup)
+
+
 (defun flycheck-cpp-setup ()
   (flycheck-mode)
   (defvar flycheck-checker 'c/c++-clang))
@@ -120,17 +146,22 @@
 (load "/usr/share/emacs/site-lisp/clang-format-3.4/clang-format.el")
 ;(add-hook 'after-init-hook #'global-flycheck-mode)
 
-(autoload 'autopep8-format-buffer "/home/david/autopep8.el")
-;(autoload 'py-autopep8-buffer "/home/david/py-autopep8.el")
-;(defvar py-autopep8-options '("-a, -a"))
+(require 'py-autopep8)
+(setq py-autopep8-options '("-a" "-a"))
+(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 
 ;set up clang format and autopep8 to run on save
-(defun do-style-hook () ""
-  (if (eq major-mode 'c++-mode)
-      (clang-format-buffer)
-    (if (eq major-mode 'python-mode)
-        (autopep8-format-buffer))))
+ (defun do-style-hook () ""
+   (if (eq major-mode 'c++-mode)
+       (clang-format-buffer))
+; https://github.com/yasuyk/web-beautify
+;   (if (eq major-mode 'js-mode)
+;       (web-beautify-js-buffer))
+)
+;     (if (eq major-mode 'python-mode)
+;         (autopep8-format-buffer)))
 ;        (py-autopep8-buffer))))
 
-;(add-hook 'before-save-hook #'autopep8-before-save)
 (add-hook 'before-save-hook #'do-style-hook)
+
+(require 'jinja2-mode)
