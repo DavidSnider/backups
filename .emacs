@@ -28,6 +28,9 @@
 ;; Goto-line short-cut key
 (global-set-key "\C-cg" 'goto-line)
 
+;; comment region to C-c C-c
+(global-set-key  "\C-q" 'comment-region)
+
 ;set tabs correctly
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
@@ -140,7 +143,7 @@
   (flycheck-mode)
   (defvar flycheck-checker 'c/c++-clang))
 (add-hook 'c++-mode-hook #'flycheck-cpp-setup)
-(setq flycheck-clang-language-standard "c++11")
+(setq flycheck-clang-language-standard "c++14")
 (setq flycheck-cppcheck-checks "warning,information,performance")
 
 (load "/usr/share/emacs/site-lisp/clang-format-3.4/clang-format.el")
