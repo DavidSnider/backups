@@ -1,5 +1,6 @@
 ; auto c++mode to .h files
-(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+;(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c-mode))
 
 ; auto jinja2-mode to .html files
 (add-to-list 'auto-mode-alist '("\\.html\\'" . jinja2-mode))
@@ -16,7 +17,6 @@
 ; line numbers
 (global-linum-mode t)
 (setq linum-format "%d ")
-
 ; ediff split
 (setq ediff-split-window-function 'split-window-horizontally)
 
@@ -51,27 +51,6 @@
 ;(setq whitespace-style '(face empty tabs lines-tail trailing))
 ;(global-whitespace-mode t)
 
-;tab complete stuff
-(require 'hippie-exp)
-(setq hippie-expand-try-functions-list
-     '(try-expand-dabbrev
-        try-expand-dabbrev-all-buffers
-        try-expand-dabbrev-from-kill))
-;         try-complete-file-name
-;         try-complete-lisp-symbol))
-
-(defun clever-hippie-tab (arg)
-  "Ordinary tab or dabbrev"
-  (interactive "*P")
-  (cond
-   ((and transient-mark-mode mark-active)
-    (indent-region (region-beginning) (region-end) nil))
-   ((and (eq (char-syntax (preceding-char)) ?w)
-         (not (= (current-column) 0)))
-    (hippie-expand arg))
-   (t (indent-for-tab-command))))
-
-(global-set-key (kbd "TAB") 'clever-hippie-tab)
 (global-set-key (kbd "C-TAB") 'undo)
 
 ; move to left windnow
@@ -111,7 +90,7 @@
 
 (defun lfe () ""
   (interactive)
-  (load-file "/home/dizzy/.emacs"))
+  (load-file "/home/david/.emacs"))
 
 (global-set-key (kbd "M-c")         'compile)
 (global-set-key (kbd "M-n")         'next-error)
@@ -120,50 +99,72 @@
 ;(global-set-key [f10]              'gdb)
 
 (require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
+
+;automatically pair brackets
+(require 'autopair)
+(autopair-global-mode 1)
+;(setq autopair-autowrap t)
+
+; completion in emacs shell
+(require 'bash-completion)
+(bash-completion-setup)
+
+;auto-complete stuff
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(require 'company-c-headers)
+(add-to-list 'company-backends 'company-c-headers)
+(add-to-list 'company-c-headers-path-system "/usr/include/c++/5/")
+;(setq company-backends (delete 'company-clang company-backends))
+(defun indent-or-complete ()
+  (interactive)
+  (if (looking-at "\\_>")
+      (company-complete-common)
+    (indent-according-to-mode)))
+(global-set-key (kbd "TAB") 'indent-or-complete)
 
 ;define preferences for flycheck
 (setq flycheck-highlighting-mode 'lines)
 (setq flycheck-check-syntax-automatically '(new-line save))
+(setq flycheck-cppcheck-checks "warning,information,performance")
 
 (defun flycheck-python-setup ()
   (flycheck-mode)
   (defvar flycheck-checker 'python-pylint))
+
+(defun c-cpp-setup()
+  (flycheck-mode)
+  (defvar flycheck-checker 'c/c++-clang)
+  (semantic-mode 1))
+
+(defun c-setup ()
+  (c-cpp-setup)
+  (defvar flycheck-clang-language-standard)
+  (setq flycheck-clang-language-standard "c99"))
+
+(defun cpp-setup ()
+  (c-cpp-setup)
+  (defvar flycheck-clang-language-standard)
+  (setq flycheck-clang-language-standard "c++14"))
+
+
+(add-hook 'c++-mode-hook #'cpp-setup)
+(add-hook 'c-mode-hook #'c-setup)
 (add-hook 'python-mode-hook #'flycheck-python-setup)
 
-(defun flycheck-js-setup ()
-  (flycheck-mode)
-  (defvar flycheck-checker 'javascript-jshint))
-(add-hook 'js-mode-hook #'flycheck-js-setup)
-
-
-(defun flycheck-cpp-setup ()
-  (flycheck-mode)
-  (defvar flycheck-checker 'c/c++-clang))
-(add-hook 'c++-mode-hook #'flycheck-cpp-setup)
-(setq flycheck-clang-language-standard "c++14")
-(setq flycheck-cppcheck-checks "warning,information,performance")
-
 (load "/usr/share/emacs/site-lisp/clang-format-3.4/clang-format.el")
-;(add-hook 'after-init-hook #'global-flycheck-mode)
 
 (require 'py-autopep8)
 (setq py-autopep8-options '("-a" "-a"))
 (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 
 ;set up clang format and autopep8 to run on save
- (defun do-style-hook () ""
-   (if (eq major-mode 'c++-mode)
-       (clang-format-buffer))
-; https://github.com/yasuyk/web-beautify
-;   (if (eq major-mode 'js-mode)
-;       (web-beautify-js-buffer))
-)
-;     (if (eq major-mode 'python-mode)
-;         (autopep8-format-buffer)))
-;        (py-autopep8-buffer))))
+(defun do-style-hook () ""
+  (if (or (eq major-mode 'c++-mode)
+          (eq major-mode 'c-mode))
+      (clang-format-buffer)))
 
 (add-hook 'before-save-hook #'do-style-hook)
 
