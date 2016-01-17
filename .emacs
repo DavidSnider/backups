@@ -135,7 +135,7 @@
 (defun c-cpp-setup()
   (flycheck-mode)
   (defvar flycheck-checker 'c/c++-clang)
-  )
+  (setq ac-sources (append '(ac-source-c-headers ac-source-clang) ac-sources)))
 
 (defun c-setup ()
   (c-cpp-setup)
