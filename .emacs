@@ -1,15 +1,27 @@
+(require 'package)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(package-initialize)
+
+(require 'better-defaults)
+
+; get rid of useless backups I never use and just remove
+(setq make-backup-files nil)
+
+;tell me where I am in a line
+(column-number-mode 1)
+
+;set return go to newline and indent
+(global-set-key (kbd "RET") 'newline-and-indent)
+
 ; auto c++mode to .h files
 ;(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c-mode))
-
 ; auto jinja2-mode to .html files
 (add-to-list 'auto-mode-alist '("\\.html\\'" . jinja2-mode))
 
-
 (setq-default ispell-program-name "aspell")
-
-; fix split windows vertically issue
-;(setq split-width-threshold 0)
 
 ; m-x compile scrolls automatically
 (setq compilation-scroll-output 'first-error)
@@ -21,15 +33,11 @@
 (setq ediff-split-window-function 'split-window-horizontally)
 
 ;fix stupid indent bugs
-(setq c-default-style "linux"
-      c-basic-offset 2)
+(setq c-default-style "linux" c-basic-offset 2)
 (setq python-indent-offset 4)
 
-;; Goto-line short-cut key
-(global-set-key "\C-cg" 'goto-line)
-
-;; comment region to C-c C-c
-(global-set-key  "\C-q" 'comment-region)
+;; comment region to C-q
+(global-set-key  "\C-q" 'comment-or-uncomment-region)
 
 ;set tabs correctly
 (setq-default indent-tabs-mode nil)
@@ -48,10 +56,7 @@
 (setq whitespace-style '(face lines-tail))
 (add-hook 'prog-mode-hook 'whitespace-mode)
 
-;(setq whitespace-style '(face empty tabs lines-tail trailing))
-;(global-whitespace-mode t)
-
-(global-set-key (kbd "C-TAB") 'undo)
+(global-set-key (kbd "C-;") 'comment-or-uncomment-region)
 
 ; move to left windnow
 (global-set-key (kbd "M-<left>") 'windmove-left)
@@ -65,29 +70,13 @@
 ; Changes all yes/no questions to y/n type
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;make M-x rep do M-x replace-string
 (defalias 'rep 'replace-string)
-
-;make M-x gt do M-x goto-line
 (defalias 'gt 'goto-line)
-
-;make M-x bcf do M-x byte-compile-file
 (defalias 'bcf 'byte-compile-file)
-
-;make M-x reload reload the current file
 (defalias 'reload 'revert-buffer)
-
-;make M-x lf do M-x load-file
 (defalias 'lf 'load-file)
 
-(defun sc () ""
-  (interactive)
-  (add-hook 'before-save-hook #'do-style-hook))
-
-(defun rsc () ""
-  (interactive)
-  (remove-hook 'before-save-hook #'do-style-hook))
-
+; reload the .emacs
 (defun lfe () ""
   (interactive)
   (load-file "/home/david/.emacs"))
@@ -98,10 +87,6 @@
 ;(global-set-key [f5]               'gud-next)
 ;(global-set-key [f10]              'gdb)
 
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(package-initialize)
-
 ;automatically pair brackets
 (require 'autopair)
 (autopair-global-mode 1)
@@ -111,17 +96,30 @@
 (require 'bash-completion)
 (bash-completion-setup)
 
-;auto-complete stuff
-(require 'company)
-(add-hook 'after-init-hook 'global-company-mode)
-(require 'company-c-headers)
-(add-to-list 'company-backends 'company-c-headers)
-(add-to-list 'company-c-headers-path-system "/usr/include/c++/5/")
-;(setq company-backends (delete 'company-clang company-backends))
+;;auto-complete-stuff
+(require 'auto-complete)
+(require 'auto-complete-config)
+(ac-config-default)
+(require 'auto-complete-c-headers)
+(add-to-list 'achead:include-directories '"/usr/include/c++/5")
+(require 'auto-complete-clang)
+(setq ac-clang-flags
+            (mapcar (lambda (item)(concat "-I" item))
+                    (split-string "
+ /usr/include/c++/5
+ /usr/include/x86_64-linux-gnu/c++/5
+ /usr/include/c++/5/backward
+ /usr/lib/gcc/x86_64-linux-gnu/5/include
+ /usr/local/include
+ /usr/lib/gcc/x86_64-linux-gnu/5/include-fixed
+ /usr/include/x86_64-linux-gnu
+ /usr/include
+" )))
+
 (defun indent-or-complete ()
   (interactive)
   (if (looking-at "\\_>")
-      (company-complete-common)
+      (auto-complete)
     (indent-according-to-mode)))
 (global-set-key (kbd "TAB") 'indent-or-complete)
 
@@ -137,17 +135,19 @@
 (defun c-cpp-setup()
   (flycheck-mode)
   (defvar flycheck-checker 'c/c++-clang)
-  (semantic-mode 1))
+  )
 
 (defun c-setup ()
   (c-cpp-setup)
   (defvar flycheck-clang-language-standard)
-  (setq flycheck-clang-language-standard "c99"))
+  (setq flycheck-clang-language-standard "c99")
+  (add-to-list 'ac-clang-flags '"-std=c99"))
 
 (defun cpp-setup ()
   (c-cpp-setup)
   (defvar flycheck-clang-language-standard)
-  (setq flycheck-clang-language-standard "c++14"))
+  (setq flycheck-clang-language-standard "c++14")
+  (add-to-list 'ac-clang-flags '"-std=c++14"))
 
 
 (add-hook 'c++-mode-hook #'cpp-setup)

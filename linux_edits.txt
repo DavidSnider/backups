@@ -87,3 +87,11 @@ in emacs, run
 to fix sleep issues if they exist:
    put script named usbunbinder.sh containing contents of
        https://gist.githubusercontent.com/zysh/9434dbfd835443ac32b9/raw/9970e302f3a0299a9e697c5535bc8c0cc021585b/Scriptototot in /etc/pm/sleep.d/ and then make it executable
+
+for emacs c++ autocomplete to work correctly, you'll need to modify auto-complete-config.el after all the package installations
+   in ac-config-default:
+      (add-hook 'c++-mode-hook 'ac-c-and-cpp-mode-setup)
+      (add-hook 'c-mode-hook 'ac-c-and-cpp-mode-setup)
+   and above ac-config-default:
+      (defun ac-c-and-cpp-mode-setup ()
+      (setq ac-sources (append '(ac-source-c-headers ac-source-clang) ac-sources)))
