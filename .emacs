@@ -26,6 +26,14 @@
 ; m-x compile scrolls automatically
 (setq compilation-scroll-output 'first-error)
 
+;for inline googling
+(require 'google-this)
+(google-this-mode 1)
+(global-set-key (kbd "C-c g") 'google-this)
+
+; start debugger if error occurs
+(setq debug-on-error 1)
+
 ; line numbers
 (global-linum-mode t)
 (setq linum-format "%d ")
@@ -100,8 +108,6 @@
 (require 'auto-complete)
 (require 'auto-complete-config)
 (ac-config-default)
-(setq ac-use-quick-help nil)
-(global-auto-complete-mode t)
 
 (require 'auto-complete-c-headers)
 (add-to-list 'achead:include-directories '"/usr/include/c++/5")
