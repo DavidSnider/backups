@@ -100,6 +100,9 @@
 (require 'auto-complete)
 (require 'auto-complete-config)
 (ac-config-default)
+(setq ac-use-quick-help nil)
+(global-auto-complete-mode t)
+
 (require 'auto-complete-c-headers)
 (add-to-list 'achead:include-directories '"/usr/include/c++/5")
 (require 'auto-complete-clang)
