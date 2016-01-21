@@ -58,9 +58,9 @@ prompt_command() {
     local CYAN="\[\033[0;36m\]"
     local NORMAL="\[\033[0m\]"
     failure(){
-        [ $EXIT = 0 ] || echo "$RED[You're a failure]"
+        [ $EXIT = 0 ] || echo "$(tput bold)$(tput setaf 1)You're a failure\n"
     }
-    PS1="$CYAN[\u]$GREEN[\w]$(failure)$NORMAL$(__git_ps1 ' (%s)')\n> "
+    PS1="$(failure)$CYAN[\u]$GREEN[\w]$NORMAL$(__git_ps1 ' (%s)')\n> "
 }
 PROMPT_COMMAND=prompt_command
 
