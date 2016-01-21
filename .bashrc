@@ -35,7 +35,7 @@ moveToTrash() {
 }
 
 alias cd281='cd ~/Documents/281\ IA/Winter16'
-alias cd381='cd ~/Documents/Current\ Classes/EECS381'
+alias cd381='cd ~/Documents/Current\ Classes/EECS381/projects/p1'
 alias cd398='cd ~/Documents/Current\ Classes/EECS398'
 alias cd441='cd ~/Documents/Current\ Classes/EECS441'
 
@@ -50,19 +50,19 @@ alias update='sudo apt-get update && updatehelper'
 alias pack='tar vczf'
 alias unpack='tar xzvf'
 
-function prompt {
+prompt_command() {
+    local EXIT="$?"
     local RED="\[\033[0;31m\]"
     local GREEN="\[\033[0;32m\]"
     local BLUE="\[\033[0;34m\]"
-
     local CYAN="\[\033[0;36m\]"
     local NORMAL="\[\033[0m\]"
-
-    PS1='$(__git_ps1 " (%s)")'
-    PS1="$CYAN[\u]$GREEN[\w]$NORMAL$PS1"
-    PS1="$PS1\n> "
+    failure(){
+        [ $EXIT = 0 ] || echo "$RED[You're a failure]"
+    }
+    PS1="$CYAN[\u]$GREEN[\w]$(failure)$NORMAL$(__git_ps1 ' (%s)')\n> "
 }
-prompt
+PROMPT_COMMAND=prompt_command
 
 alias ls='ls --color=auto --group-directories-first'
 alias ll='ls -lh'
@@ -79,3 +79,7 @@ export VISUAL=emacs
 export EDITOR=emacs
 
 export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
+
+if [ -f /etc/bash_completion ]; then
+  source /etc/bash_completion
+fi
