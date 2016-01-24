@@ -108,6 +108,12 @@
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 (require 'company-c-headers)
+; M-x customize-group RET company RET to tool with colors
+;; set to pretty colors that are easy to see
+(custom-set-faces
+ '(company-tooltip ((t (:foreground "cyan"))))
+'(company-tooltip-selection ((t (:background "steelblue" :foreground "white"))))
+'(company-template-field ((t (:background nil :foreground "steelblue")))))
 
 (defun indent-or-complete ()
   (interactive)
