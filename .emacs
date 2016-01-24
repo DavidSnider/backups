@@ -119,7 +119,7 @@
   (interactive)
   (if (looking-at "\\_>")
       (company-complete)
-    (indent-according-to-mode)))
+    (indent-for-tab-command)))
 (global-set-key (kbd "TAB") 'indent-or-complete)
 
 ;define preferences for flycheck
