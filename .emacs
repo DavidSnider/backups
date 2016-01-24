@@ -105,30 +105,14 @@
 (bash-completion-setup)
 
 ;;auto-complete-stuff
-(require 'auto-complete)
-(require 'auto-complete-config)
-(ac-config-default)
-
-(require 'auto-complete-c-headers)
-(add-to-list 'achead:include-directories '"/usr/include/c++/5")
-(require 'auto-complete-clang)
-(setq ac-clang-flags
-            (mapcar (lambda (item)(concat "-I" item))
-                    (split-string "
- /usr/include/c++/5
- /usr/include/x86_64-linux-gnu/c++/5
- /usr/include/c++/5/backward
- /usr/lib/gcc/x86_64-linux-gnu/5/include
- /usr/local/include
- /usr/lib/gcc/x86_64-linux-gnu/5/include-fixed
- /usr/include/x86_64-linux-gnu
- /usr/include
-" )))
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(require 'company-c-headers)
 
 (defun indent-or-complete ()
   (interactive)
   (if (looking-at "\\_>")
-      (auto-complete)
+      (company-complete)
     (indent-according-to-mode)))
 (global-set-key (kbd "TAB") 'indent-or-complete)
 
@@ -144,19 +128,22 @@
 (defun c-cpp-setup()
   (flycheck-mode)
   (defvar flycheck-checker 'c/c++-clang)
-  (setq ac-sources (append '(ac-source-c-headers ac-source-clang) ac-sources)))
+  (add-to-list 'company-backends 'company-c-headers)
+  (add-to-list 'company-c-headers-path-system "/usr/include/c++/5/"))
 
 (defun c-setup ()
   (c-cpp-setup)
   (defvar flycheck-clang-language-standard)
   (setq flycheck-clang-language-standard "c99")
-  (add-to-list 'ac-clang-flags '"-std=c99"))
+  (defvar company-clang-arguments)
+  (setq company-clang-arguments (list "-std=c99")))
 
 (defun cpp-setup ()
   (c-cpp-setup)
   (defvar flycheck-clang-language-standard)
   (setq flycheck-clang-language-standard "c++14")
-  (add-to-list 'ac-clang-flags '"-std=c++14"))
+  (defvar company-clang-arguments)
+  (setq company-clang-arguments (list "-std=c++14")))
 
 
 (add-hook 'c++-mode-hook #'cpp-setup)
