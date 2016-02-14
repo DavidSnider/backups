@@ -16,8 +16,8 @@
 (global-set-key (kbd "RET") 'newline-and-indent)
 
 ; auto c++mode to .h files
-;(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.h\\'" . c-mode))
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+;(add-to-list 'auto-mode-alist '("\\.h\\'" . c-mode))
 ; auto jinja2-mode to .html files
 (add-to-list 'auto-mode-alist '("\\.html\\'" . jinja2-mode))
 
@@ -84,6 +84,7 @@
 (defalias 'reload 'revert-buffer)
 (defalias 'lf 'load-file)
 
+
 ; reload the .emacs
 (defun lfe () ""
   (interactive)
@@ -91,6 +92,7 @@
 
 (global-set-key (kbd "M-c")         'compile)
 (global-set-key (kbd "M-n")         'next-error)
+(global-set-key (kbd "C-c n") 'flycheck-next-error)
 ;(global-set-key [f4]               'kill-compilation)
 ;(global-set-key [f5]               'gud-next)
 ;(global-set-key [f10]              'gdb)
@@ -115,12 +117,18 @@
 '(company-tooltip-selection ((t (:background "steelblue" :foreground "white"))))
 '(company-template-field ((t (:background nil :foreground "steelblue")))))
 
+;(require 'yasnippet)
+
 (defun indent-or-complete ()
   (interactive)
   (if (looking-at "\\_>")
+      ;(company-complete-common)
       (company-complete)
     (indent-for-tab-command)))
 (global-set-key (kbd "TAB") 'indent-or-complete)
+
+(add-to-list 'load-path "~/.emacs.d/lint381/")
+(require 'lint381)
 
 ;define preferences for flycheck
 (setq flycheck-highlighting-mode 'lines)
@@ -135,6 +143,7 @@
   (flycheck-mode)
   (defvar flycheck-checker 'c/c++-clang)
   (add-to-list 'company-backends 'company-c-headers)
+  ;(add-to-list 'company-backends 'company-yasnippet)
   (add-to-list 'company-c-headers-path-system "/usr/include/c++/5/"))
 
 (defun c-setup ()
@@ -142,7 +151,8 @@
   (defvar flycheck-clang-language-standard)
   (setq flycheck-clang-language-standard "c99")
   (defvar company-clang-arguments)
-  (setq company-clang-arguments (list "-std=c99")))
+  (setq company-clang-arguments (list "-std=c99"))
+  (setq flycheck-lint381-language "c"))
 
 (defun cpp-setup ()
   (c-cpp-setup)
@@ -156,13 +166,13 @@
 (add-hook 'c-mode-hook #'c-setup)
 (add-hook 'python-mode-hook #'flycheck-python-setup)
 
-(load "/usr/share/emacs/site-lisp/clang-format-3.4/clang-format.el")
+(require 'clang-format)
 
 (require 'py-autopep8)
 (setq py-autopep8-options '("-a" "-a"))
 (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 
-;set up clang format and autopep8 to run on save
+;set up clang format to run on save
 (defun do-style-hook () ""
   (if (or (eq major-mode 'c++-mode)
           (eq major-mode 'c-mode))
