@@ -141,6 +141,9 @@
 
 (defun c-cpp-setup()
   (flycheck-mode)
+  (defvar company-clang-arguments)
+  (defvar flycheck-clang-language-standard)
+  (make-local-variable 'company-clang-arguments)
   (defvar flycheck-checker 'c/c++-clang)
   (add-to-list 'company-backends 'company-c-headers)
   ;(add-to-list 'company-backends 'company-yasnippet)
@@ -148,18 +151,16 @@
 
 (defun c-setup ()
   (c-cpp-setup)
-  (defvar flycheck-clang-language-standard)
   (setq flycheck-clang-language-standard "c99")
-  (defvar company-clang-arguments)
   (setq company-clang-arguments (list "-std=c99"))
   (setq flycheck-lint381-language "c"))
 
 (defun cpp-setup ()
   (c-cpp-setup)
-  (defvar flycheck-clang-language-standard)
   (setq flycheck-clang-language-standard "c++14")
-  (defvar company-clang-arguments)
-  (setq company-clang-arguments (list "-std=c++14")))
+  (setq company-clang-arguments (list "-std=c++14"))
+  (defvar flycheck-cppcheck-language-standard)
+  (setq flycheck-cppcheck-language-standard "c++11"))
 
 
 (add-hook 'c++-mode-hook #'cpp-setup)
