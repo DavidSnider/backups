@@ -15,9 +15,10 @@
 ;set return go to newline and indent
 (global-set-key (kbd "RET") 'newline-and-indent)
 
-; auto c++mode to .h files
+; auto c++mode to .h and .ipp files
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-;(add-to-list 'auto-mode-alist '("\\.h\\'" . c-mode))
+(add-to-list 'auto-mode-alist '("\\.ipp\\'" . c++-mode))
+
 ; auto jinja2-mode to .html files
 (add-to-list 'auto-mode-alist '("\\.html\\'" . jinja2-mode))
 
@@ -32,7 +33,7 @@
 (global-set-key (kbd "C-c g") 'google-this)
 
 ; start debugger if error occurs
-(setq debug-on-error 1)
+; (setq debug-on-error 1)
 
 ; line numbers
 (global-linum-mode t)
@@ -113,9 +114,13 @@
 ; M-x customize-group RET company RET to tool with colors
 ;; set to pretty colors that are easy to see
 (custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-template-field ((t (:background nil :foreground "steelblue"))))
  '(company-tooltip ((t (:foreground "cyan"))))
-'(company-tooltip-selection ((t (:background "steelblue" :foreground "white"))))
-'(company-template-field ((t (:background nil :foreground "steelblue")))))
+ '(company-tooltip-selection ((t (:background "steelblue" :foreground "white")))))
 
 ;(require 'yasnippet)
 
@@ -141,6 +146,7 @@
 
 (defun c-cpp-setup()
   (flycheck-mode)
+  ;(flyspell-prog-mode)
   (defvar company-clang-arguments)
   (defvar flycheck-clang-language-standard)
   (make-local-variable 'company-clang-arguments)
@@ -171,7 +177,7 @@
 
 (require 'py-autopep8)
 (setq py-autopep8-options '("-a" "-a"))
-(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
+;(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 
 ;set up clang format to run on save
 (defun do-style-hook () ""
