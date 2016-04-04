@@ -29,15 +29,18 @@ alias rebase='git fetch && git rebase origin/master'
 alias tl='tmux list-sessions'
 alias ta='tmux attach-session -t'
 
+# append to the history file, don't overwrite it
+shopt -s histappend
+history -a
+
 #alias rm='moveToTrash'
 moveToTrash() {
     'mv' "$@" '/home/david/.local/share/Trash/files/'
 }
 
-alias cd281='cd ~/Documents/281\ IA/Winter16'
-alias cd381='cd ~/Documents/Current\ Classes/EECS381/projects/p1'
+alias cd281='cd ~/Documents/281\ IA/Winter16/proj3'
+alias cd381='cd ~/Documents/Current\ Classes/EECS381/projects/p5'
 alias cd398='cd ~/Documents/Current\ Classes/EECS398'
-alias cd441='cd ~/Documents/Current\ Classes/EECS441'
 
 alias ssh485='ssh sniderdj@eecs485-09.eecs.umich.edu'
 alias sshscheduler='ssh david@159.203.130.220'
@@ -74,9 +77,9 @@ LS_COLORS=$LS_COLORS':fi=00:ln=00:pi=00:so=00:bd=00:cd=00:or=00:mi=00:ex=00'
 LS_COLORS=$LS_COLORS':*.sh=31:*.sh=31:*.exe=31:*.bat=31:*.com=31'
 export LS_COLORS
 
-export GIT_EDITOR=emacs
-export VISUAL=emacs
-export EDITOR=emacs
+export GIT_EDITOR="emacs -nw"
+export VISUAL="emacs -nw"
+export EDITOR="emacs -nw"
 
 export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
 
