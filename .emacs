@@ -177,7 +177,7 @@
 
 (require 'py-autopep8)
 (setq py-autopep8-options '("-a" "-a"))
-;(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
+(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 
 ;set up clang format to run on save
 (defun do-style-hook () ""
