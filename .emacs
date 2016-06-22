@@ -122,15 +122,35 @@
  '(company-tooltip ((t (:foreground "cyan"))))
  '(company-tooltip-selection ((t (:background "steelblue" :foreground "white")))))
 
-;(require 'yasnippet)
+;; set up snippet completion
+(require 'yasnippet)
+(yas-global-mode 1)
 
-(defun indent-or-complete ()
+;; get snippet completion and autocomplete working together
+;; if not in a place to expand, just do the tab thingy
+(defun check-expansion ()
+  (save-excursion
+    (if (looking-at "\\_>") t
+      (backward-char 1)
+      (if (looking-at "\\.") t
+        (backward-char 1)
+        (if (looking-at "->") t nil)))))
+
+(defun do-yas-expand ()
+  (let ((yas-fallback-behavior 'return-nil))
+    (yas-expand)))
+
+(defun tab-indent-or-complete ()
   (interactive)
-  (if (looking-at "\\_>")
-      ;(company-complete-common)
-      (company-complete)
-    (indent-for-tab-command)))
-(global-set-key (kbd "TAB") 'indent-or-complete)
+  (if (minibufferp)
+      (minibuffer-complete)
+    (if (or (not yas-minor-mode)
+            (null (do-yas-expand)))
+        (if (check-expansion)
+            (company-complete)
+          (indent-for-tab-command)))))
+
+(global-set-key (kbd "TAB") 'tab-indent-or-complete)
 
 (add-to-list 'load-path "~/.emacs.d/lint381/")
 (require 'lint381)
