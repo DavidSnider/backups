@@ -110,6 +110,7 @@
 ;;auto-complete-stuff
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
+;(setq company-transformers '(company-sort-by-occurrence))
 (require 'company-c-headers)
 ; M-x customize-group RET company RET to tool with colors
 ;; set to pretty colors that are easy to see
@@ -122,12 +123,12 @@
  '(company-tooltip ((t (:foreground "cyan"))))
  '(company-tooltip-selection ((t (:background "steelblue" :foreground "white")))))
 
-;; set up snippet completion
-(require 'yasnippet)
-(yas-global-mode 1)
+; so jedi uses the correct version of python
+(require 'python-environment)
+(setq python-environment-virtualenv
+      (append python-environment-virtualenv
+              '("--python" "/usr/bin/python3")))
 
-;; get snippet completion and autocomplete working together
-;; if not in a place to expand, just do the tab thingy
 (defun check-expansion ()
   (save-excursion
     (if (looking-at "\\_>") t
@@ -136,21 +137,32 @@
         (backward-char 1)
         (if (looking-at "->") t nil)))))
 
-(defun do-yas-expand ()
-  (let ((yas-fallback-behavior 'return-nil))
-    (yas-expand)))
-
 (defun tab-indent-or-complete ()
   (interactive)
   (if (minibufferp)
       (minibuffer-complete)
-    (if (or (not yas-minor-mode)
-            (null (do-yas-expand)))
-        (if (check-expansion)
-            (company-complete)
-          (indent-for-tab-command)))))
+    (if (check-expansion)
+        (company-complete)
+      (indent-for-tab-command))))
 
 (global-set-key (kbd "TAB") 'tab-indent-or-complete)
+
+
+;; Add yasnippet support for all company backends
+;; https://github.com/syl20bnr/spacemacs/pull/179
+(defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+
+;; attach a ":seperate company-yasnippet" to the backend, regardless of if grouped
+(defun company-mode/backend-with-yas (backend)
+  (if (or (not company-mode/enable-yas)
+          (and (listp backend) (member 'company-yasnippet backend)))
+      backend
+    (append (if (consp backend) backend (list backend))
+            '(:seperate company-yasnippet))))
+
+;; run on every backend
+(setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+
 
 (add-to-list 'load-path "~/.emacs.d/lint381/")
 (require 'lint381)
@@ -171,8 +183,7 @@
   (defvar flycheck-clang-language-standard)
   (make-local-variable 'company-clang-arguments)
   (defvar flycheck-checker 'c/c++-clang)
-  (add-to-list 'company-backends 'company-c-headers)
-  ;(add-to-list 'company-backends 'company-yasnippet)
+  (add-to-list 'company-backends '(company-c-headers :seperate company-yasnippet))
   (add-to-list 'company-c-headers-path-system "/usr/include/c++/5/"))
 
 (defun c-setup ()
@@ -188,10 +199,14 @@
   (defvar flycheck-cppcheck-language-standard)
   (setq flycheck-cppcheck-language-standard "c++11"))
 
+(defun python-setup ()
+  (flycheck-python-setup)
+  (add-to-list 'company-backends '(company-jedi :seperate company-yasnippet)))
 
 (add-hook 'c++-mode-hook #'cpp-setup)
 (add-hook 'c-mode-hook #'c-setup)
-(add-hook 'python-mode-hook #'flycheck-python-setup)
+(add-hook 'python-mode-hook #'python-setup)
+;(add-hook 'python-mode-hook #'flycheck-python-setup)
 
 (require 'clang-format)
 
