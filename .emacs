@@ -172,10 +172,6 @@
 (setq flycheck-check-syntax-automatically '(new-line save))
 (setq flycheck-cppcheck-checks "warning,information,performance")
 
-(defun flycheck-python-setup ()
-  (flycheck-mode)
-  (defvar flycheck-checker 'python-pylint))
-
 (defun c-cpp-setup()
   (flycheck-mode)
   ;(flyspell-prog-mode)
@@ -200,13 +196,13 @@
   (setq flycheck-cppcheck-language-standard "c++11"))
 
 (defun python-setup ()
-  (flycheck-python-setup)
+  (flycheck-mode)
+  (defvar flycheck-checker 'python-pylint)
   (add-to-list 'company-backends '(company-jedi :seperate company-yasnippet)))
 
 (add-hook 'c++-mode-hook #'cpp-setup)
 (add-hook 'c-mode-hook #'c-setup)
 (add-hook 'python-mode-hook #'python-setup)
-;(add-hook 'python-mode-hook #'flycheck-python-setup)
 
 (require 'clang-format)
 
